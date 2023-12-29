@@ -12,7 +12,7 @@ Well, when working on side projects I like to put documentation directly in the 
 ## How to install
 
 1. Clone this repo into your project's `Plugins` folder.
-2. Restart the editor.
+2. Build your project
 3. Enable the Web Browser plugin (`Edit -> Plugins` from the menu)
 4. Enable the Markdown Asset plugin (`Edit -> Plugins` from the menu)
 
