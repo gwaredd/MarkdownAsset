@@ -90,6 +90,7 @@ const Edit = (props) => {
       onValueChange = {setCode}
       highlight     = {code => hljs.highlight(code, {language: 'markdown', ignoreIllegals: true }).value}
       padding       = {theme.spacing(3)}
+      autoFocus     = {true}
       style         = {{
         fontFamily: '"Fira code", "Fira Mono", monospace',
         fontSize  : 12,
