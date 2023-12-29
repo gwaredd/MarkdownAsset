@@ -17,7 +17,11 @@
 SMarkdownAssetEditor::~SMarkdownAssetEditor()
 {
 	FCoreUObjectDelegates::OnObjectPropertyChanged.RemoveAll( this );
-	WebBrowser->CloseBrowser();
+
+	if( WebBrowser.IsValid() )
+	{
+		WebBrowser->CloseBrowser();
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,6 +29,12 @@ SMarkdownAssetEditor::~SMarkdownAssetEditor()
 void SMarkdownAssetEditor::Construct( const FArguments& InArgs, UMarkdownAsset* InMarkdownAsset, const TSharedRef<ISlateStyle>& InStyle )
 {
 	MarkdownAsset = InMarkdownAsset;
+
+	if( !FModuleManager::Get().IsModuleLoaded( "WebBrowser" ) )
+	{
+        FMessageDialog::Open( EAppMsgType::Ok, LOCTEXT( "WebBrowserModuleMissing", "You need to enable the WebBrowser plugin to run the Markdown editor." ) );
+        return;
+	}
 
 	auto Settings = GetDefault<UMarkdownAssetEditorSettings>();
 
