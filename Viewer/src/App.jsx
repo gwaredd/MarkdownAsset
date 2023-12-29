@@ -20,7 +20,7 @@ hljs.registerLanguage( 'markdown', markdown )
 hljs.registerLanguage( 'javascript', javascript )
 hljs.registerLanguage( 'js', javascript )
 
-/**/
+/**
 import './AppDark.css'
 import 'highlight.js/styles/base16/monokai.css'
 /*/
@@ -92,8 +92,9 @@ const Edit = (props) => {
       padding       = {theme.spacing(3)}
       style         = {{
         fontFamily: '"Fira code", "Fira Mono", monospace',
-        fontSize: 12,
-        height: '100%',
+        fontSize  : 12,
+        width     : '100vw',
+        minHeight : '100vh',
       }}
     />
   )
