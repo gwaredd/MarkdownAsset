@@ -117,15 +117,6 @@ void FMarkdownAssetEditorToolkit::AddReferencedObjects( FReferenceCollector& Col
 	Collector.AddReferencedObject( MarkdownAsset );
 }
 
-//void FMarkdownAssetEditorToolkit::PostUndo( bool bSuccess )
-//{
-//}
-//
-//void FMarkdownAssetEditorToolkit::PostRedo( bool bSuccess )
-//{
-//	PostUndo( bSuccess );
-//}
-
 TSharedRef<SDockTab> FMarkdownAssetEditorToolkit::HandleTabManagerSpawnTab( const FSpawnTabArgs& Args, FName TabIdentifier )
 {
 	TSharedPtr<SWidget> TabWidget = SNullWidget::NullWidget;

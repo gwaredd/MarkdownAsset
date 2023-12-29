@@ -22,39 +22,6 @@ bool FMarkdownAssetActions::CanFilter()
 void FMarkdownAssetActions::GetActions( const TArray<UObject*>& InObjects, FMenuBuilder& MenuBuilder )
 {
 	FAssetTypeActions_Base::GetActions( InObjects, MenuBuilder );
-
-	auto MarkdownAssets = GetTypedWeakObjectPtrs<UMarkdownAsset>( InObjects );
-
-	MenuBuilder.AddMenuEntry(
-		LOCTEXT( "MarkdownAsset_ReverseText", "Reverse Text" ),
-		LOCTEXT( "MarkdownAsset_ReverseTextToolTip", "Reverse the text stored in the selected markdown asset(s)." ),
-		FSlateIcon(),
-		FUIAction(
-			FExecuteAction::CreateLambda( [=]
-				{
-					for( auto& MarkdownAsset : MarkdownAssets )
-					{
-						if( MarkdownAsset.IsValid() && !MarkdownAsset->Text.IsEmpty() )
-						{
-							MarkdownAsset->Text = FText::FromString( MarkdownAsset->Text.ToString().Reverse() );
-							MarkdownAsset->PostEditChange();
-							MarkdownAsset->MarkPackageDirty();
-						}
-					}
-				} ),
-			FCanExecuteAction::CreateLambda( [=]
-				{
-					for( auto& MarkdownAsset : MarkdownAssets )
-					{
-						if( MarkdownAsset.IsValid() && !MarkdownAsset->Text.IsEmpty() )
-						{
-							return true;
-						}
-					}
-					return false;
-				} )
-		)
-	);
 }
 
 
