@@ -22,6 +22,7 @@ class SMarkdownAssetEditor : public SCompoundWidget
 		virtual ~SMarkdownAssetEditor();
 
 		void Construct( const FArguments& InArgs, UMarkdownAsset* InMarkdownAsset, const TSharedRef<ISlateStyle>& InStyle );
+		virtual FReply OnKeyDown( const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent ) override;
 
 	private:
 

@@ -20,7 +20,7 @@ hljs.registerLanguage( 'markdown', markdown )
 hljs.registerLanguage( 'javascript', javascript )
 hljs.registerLanguage( 'js', javascript )
 
-/**
+/**/
 import './AppDark.css'
 import 'highlight.js/styles/base16/monokai.css'
 /*/

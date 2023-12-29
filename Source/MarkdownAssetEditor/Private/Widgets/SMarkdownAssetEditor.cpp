@@ -59,6 +59,20 @@ void SMarkdownAssetEditor::Construct( const FArguments& InArgs, UMarkdownAsset* 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+FReply SMarkdownAssetEditor::OnKeyDown( const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent )
+{
+	// consume tilde key to prevent it from being passed to unreal and opening the console
+
+	if( InKeyEvent.GetKey() == EKeys::Tilde )
+	{
+		return FReply::Handled();
+	}
+
+	return FReply::Unhandled();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void SMarkdownAssetEditor::HandleMarkdownAssetPropertyChanged( UObject* Object, FPropertyChangedEvent& PropertyChangedEvent )
 {
 	if( Object == MarkdownAsset )
