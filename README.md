@@ -44,7 +44,7 @@ Hopefully that should work.
 
 The editor runs inside the unreal web browser client. Unfortunately, this seems to be restricted and certain features are not present.
 
-However, under the hood it is using [markdown-it](https://github.com/markdown-it/markdown-it) and I've enabled a bunch of plugins  that extend markdown with some extra useful features.
+However, under the hood it is using [markdown-it](https://github.com/markdown-it/markdown-it) and I've enabled a bunch of plugins that extend the markdown language with some extra useful features, listed below:
 
 ### Syntax Highlighting
 
@@ -119,6 +119,7 @@ Which gives this:
 
 ![X](./Docs/Diagrams.png)
 
+See [markdown-it-textual-uml](https://github.com/manastalukdar/markdown-it-textual-uml) for more details.
 
 ## Notes
 
