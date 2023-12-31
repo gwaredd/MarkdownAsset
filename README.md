@@ -5,9 +5,7 @@
 
 This adds markdown as an asset to Unreal.
 
-Why would anyone want to do this you ask? That is a good question!
-
-Well, when working on side projects I like to put documentation directly in the project. Now I can, straight in the editor. Is this a good thing? Who knows. Mainly I just wanted to write my own asset type and this seemed like a good idea at the time. Regrets? I have a few. But now it is done and other people can use it if they want, and I won't feel it was a complete waste of time :)
+Behold, the latest game-changing feature in Unreal: Markdown! Why, you ask? Because sometimes, in the wild world of side projects, you need to document your midnight musings right where the magic happens – in the game editor itself! Now, you can scribble notes amid your digital dragons and spaceships. Genius or madness? Jury's still out. Really, I just fancied coding my own asset type for giggles. Any regrets? A smidge. But hey, it's done now. If others find it useful, brilliant! If not, at least my cat appreciates the extra keyboard time.
 
 ## How to install
 
