@@ -17,6 +17,9 @@ public:
 	UFUNCTION()
 	void SetText( FText text ) { Text = text; OnSetText.Broadcast(); }
 
+	UFUNCTION()
+	void OpenURL( FString url );
+
 	DECLARE_EVENT( UMarkdownBinding, FOnSetTextEvent )
 	FOnSetTextEvent OnSetText;
 

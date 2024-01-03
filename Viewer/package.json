@@ -19,6 +19,7 @@
     "markdown-it-anchor": "^8.6.7",
     "markdown-it-highlightjs": "^4.0.1",
     "markdown-it-math": "^4.1.1",
+    "markdown-it-replace-link": "^1.2.0",
     "markdown-it-table-of-contents": "^0.6.0",
     "markdown-it-task-lists": "^2.1.1",
     "markdown-it-textual-uml": "^0.16.0",

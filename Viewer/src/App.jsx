@@ -38,6 +38,7 @@ import md_math from 'markdown-it-math'
 import md_highlight from 'markdown-it-highlightjs'
 import md_anchors  from 'markdown-it-anchor'
 import md_toc  from 'markdown-it-table-of-contents'
+import md_replace_link from 'markdown-it-replace-link'
 
 import mermaid from 'mermaid'
 
@@ -46,19 +47,24 @@ mermaid.initialize({
   theme      : 'forest'
 })
 
-const video_opts = {
+const opts_video = {
   youtube: { width: 640, height: 390 },
   vimeo  : { width: 500, height: 281 },
   vine   : { width: 600, height: 600, embed: 'simple' },
   prezi  : { width: 550, height: 400 }
 }
 
-const highlight_opts = {
+const opts_highlight = {
   auto          : true,
   hljs          : hljs,
   code          : true,
   inline        : true,
   ignoreIllegals: true,
+}
+
+const opts_replace_link = {
+  processHTML: true,
+  replaceLink: (link, env) => link.startsWith('http') ? `javascript:window.ue.markdownbinding.openurl('${link}')` : link
 }
 
 const md_opts = {
@@ -68,14 +74,14 @@ const md_opts = {
 }
 
 const md = markdownit(md_opts)
-  .use( md_highlight, highlight_opts )
+  .use( md_highlight, opts_highlight )
   .use( md_tasklists, { enabled: true } )
-  .use( md_video, video_opts )
+  .use( md_video, opts_video )
   .use( md_math )
   .use( md_diagrams )
   .use( md_anchors.default )
   .use( md_toc )
-
+  .use( md_replace_link, opts_replace_link )
 
 //-----------------------------------------------------------------------------
 
@@ -122,13 +128,10 @@ const View = (props) => {
 
 //-----------------------------------------------------------------------------
 
-//import data from './data.jsx'
-const data = ''
-
 export default function App() {
 
   const [open, setOpen] = useState( false )
-  const [code, setCode] = useState( data )
+  const [code, setCode] = useState( '' )
 
   useEffect(() => {
     if( window.ue && window.ue.markdownbinding ) {
