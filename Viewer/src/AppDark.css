@@ -1,5 +1,5 @@
 #root {
-    background-color: #1a1a1a;
+    background: #1a1a1a;
     color: #c6cdd4;
 }
 
@@ -9,5 +9,13 @@ a {
 }
 
 .mermaid {
-    background-color: #ffffff;
+    background: #1a1a1a;
+}
+
+:not(pre) .hljs {
+    background: inherit;
+}
+
+pre > code.hljs {
+    background: #272822;
 }

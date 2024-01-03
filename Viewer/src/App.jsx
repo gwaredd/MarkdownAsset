@@ -21,11 +21,11 @@ hljs.registerLanguage( 'javascript', javascript )
 hljs.registerLanguage( 'js', javascript )
 
 /**/
-import './AppDark.css'
 import 'highlight.js/styles/base16/monokai.css'
+import './AppDark.css'
 /*/
-import './AppLight.css'
 import 'highlight.js/styles/github.css'
+import './AppLight.css'
 /**/
 
 //-----------------------------------------------------------------------------
