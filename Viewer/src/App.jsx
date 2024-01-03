@@ -122,8 +122,8 @@ const View = (props) => {
 
 //-----------------------------------------------------------------------------
 
-import data from './data.jsx'
-//const data = ''
+//import data from './data.jsx'
+const data = ''
 
 export default function App() {
 
