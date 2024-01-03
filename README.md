@@ -97,7 +97,7 @@ You can automatically add a table of contents to your document like this:
 
 ### Diagrams
 
-PlantUML and Dot diagrams seem to work. Unfortunately Mermaid does not appear to.
+[PlantUML](https://plantuml.com/) and [Dot](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) diagrams seem to work. Unfortunately [Mermaid](https://mermaid.js.org/) diagrams seem to be broken by the Unreal Web Brower limitations.
 
 You add them like this:
 
