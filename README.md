@@ -1,9 +1,9 @@
 # Markdown Asset
 
+This adds markdown as an asset to the Unreal game engine.
+
 > * Tested on UE 5.3
 > * Note this also requires the Web Browser plugin to be enabled.
-
-This adds markdown as an asset to Unreal.
 
 Behold, the latest game-changing feature in Unreal: Markdown! Why, you ask? Because sometimes, in the wild world of side projects, you need to document your midnight musings right where the magic happens – in the game editor itself! Now, you can scribble notes amid your digital dragons and spaceships. Genius or madness? Jury's still out. Really, I just fancied coding my own asset type for giggles. Any regrets? A smidge. But hey, it's done now. If others find it useful, brilliant! If not, at least my cat appreciates the extra keyboard time.
 
@@ -13,8 +13,6 @@ Behold, the latest game-changing feature in Unreal: Markdown! Why, you ask? Beca
 2. Build your project
 3. Enable the Web Browser plugin (`Edit -> Plugins` from the menu)
 4. Enable the Markdown Asset plugin (`Edit -> Plugins` from the menu)
-
-Hopefully that should work.
 
 ## How to use
 
@@ -38,11 +36,9 @@ Hopefully that should work.
 * You can swap between a light and dark skin in the editor preferences
 * Edit -> Editor Preferences -> Plugins -> Markdown Asset
 
-## Markdown
+## Markdown Extensions
 
-The editor runs inside the unreal web browser client. Unfortunately, this seems to be restricted and certain features are not present.
-
-However, under the hood it is using [markdown-it](https://github.com/markdown-it/markdown-it) and I've enabled a bunch of plugins that extend the markdown language with some extra useful features, listed below:
+The editor runs inside the unreal web browser client. Under the hood it is using [markdown-it](https://github.com/markdown-it/markdown-it) and I've enabled a bunch of plugins that extend the markdown language with some extra goodies. Here's a quick rundown of what's available.
 
 ### Syntax Highlighting
 
@@ -74,7 +70,6 @@ Which gives this:
 ![X](./Docs/TaskList.png)
 
 
-
 ### Anchors
 
 Headings are automatically given anchors, so you can link to them like this:
@@ -95,12 +90,34 @@ You can automatically add a table of contents to your document like this:
 [[toc]]
 ```
 
+### MathJax
+
+You can add math equations with [MathJax](https://www.mathjax.org/) by wrapping them with `$` or `$$`:
+
+#### Inline
+
+```markdown
+    $e^{i\pi} - 1 = 0$
+```
+
+#### Block
+
+```markdown
+    $$
+    \left( \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2} \right) {| \varphi(x+ i y)|}^2 = 0
+    $$
+```
+
+Gives ...
+
+![X](./Docs/Math.png)
+
+
 ### Diagrams
 
-PlantUML and Dot diagrams seem to work. Unfortunately Mermaid does not appear to.
+Diagrams can be added with [GraphViz](https://graphviz.org/Gallery/directed/) (see [markdown-it-textual-uml](https://github.com/manastalukdar/markdown-it-textual-uml) for details).
 
-You add them like this:
-
+For example:
 
     ```plantuml
     Bob -> Alice : hello
@@ -117,13 +134,13 @@ Which gives this:
 
 ![X](./Docs/Diagrams.png)
 
-See [markdown-it-textual-uml](https://github.com/manastalukdar/markdown-it-textual-uml) for more details.
+PlantUML and Dot diagrams work fine. Ditaa and Mermaid, not so much.
 
 ## Notes
 
-**NB:** You probably do not want to ship with your documentation. Make sure the markdown assets are not included in your build!
+**NB:** You might not want to ship with your documentation. Make sure the markdown assets are not included in your build, unless you really want to ship with them.
 
-Unfortunately, support for MathJax and playing videos does not work with limitations of the Unreal web browser plugin.
+Unfortunately, playing videos does not appear to be supported by the Unreal Web Browser plugin.
 
 GL & HF
 

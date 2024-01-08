@@ -21,9 +21,11 @@ hljs.registerLanguage( 'javascript', javascript )
 hljs.registerLanguage( 'js', javascript )
 
 /**/
+const math_style = 'color=white&';
 import 'highlight.js/styles/base16/monokai.css'
 import './AppDark.css'
 /*/
+const math_style = '';
 import 'highlight.js/styles/github.css'
 import './AppLight.css'
 /**/
@@ -34,11 +36,23 @@ import markdownit from 'markdown-it'
 import md_tasklists from 'markdown-it-task-lists'
 import md_video from '@vrcd-community/markdown-it-video'
 import md_diagrams from 'markdown-it-textual-uml'
-import md_math from 'markdown-it-math'
 import md_highlight from 'markdown-it-highlightjs'
 import md_anchors  from 'markdown-it-anchor'
 import md_toc  from 'markdown-it-table-of-contents'
 import md_replace_link from './markdown-it-replace-link'
+
+//NB: MathJax API -> https://math.vercel.app/home
+// import texzilla from 'texzilla'
+import md_math from 'markdown-it-math'
+
+const opts_math = {
+  inlineOpen    : '$',
+  inlineClose   : '$',
+  blockOpen     : '$$',
+  blockClose    : '$$',
+  inlineRenderer: (str) => `<img src="https://math.vercel.app?${math_style}inline=${encodeURIComponent(str)}" alt="${str}" />`,
+  blockRenderer : (str) => `<img src="https://math.vercel.app?${math_style}from=${encodeURIComponent(str)}" alt="${str}" />`,
+}
 
 // import mermaid from 'mermaid'
 // mermaid.initialize({
@@ -76,7 +90,7 @@ const md = markdownit(md_opts)
   .use( md_highlight, opts_highlight )
   .use( md_tasklists, { enabled: true } )
   .use( md_video, opts_video )
-  .use( md_math )
+  .use( md_math, opts_math )
   .use( md_diagrams )
   .use( md_anchors.default )
   .use( md_toc )
