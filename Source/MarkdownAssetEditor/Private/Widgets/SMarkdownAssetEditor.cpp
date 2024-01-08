@@ -42,15 +42,8 @@ void SMarkdownAssetEditor::Construct( const FArguments& InArgs, UMarkdownAsset* 
 	FString FullPath   = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead( *ContentDir );
 	FString URL        = FullPath / ( Settings->bDarkSkin ? TEXT( "dark.html" ) : TEXT( "light.html" ) );
 
-	FBrowserContextSettings ContextSettings( TEXT( "MarkdownAsset" ) );
-	ContextSettings.bPersistSessionCookies       = true;
-	ContextSettings.bIgnoreCertificateErrors     = true;
-	ContextSettings.bEnableNetSecurityExpiration = false;
-
 	WebBrowser = SAssignNew( WebBrowser, SWebBrowserView )
 		.InitialURL( URL )
-		//.InterceptLoadRequests( false )
-		.ContextSettings( ContextSettings )
 		.BackgroundColor( Settings->bDarkSkin ? FColor( 0.1f, 0.1f, 0.1f, 1.0f ) : FColor( 1.0f, 1.0f, 1.0f, 1.0f ) )
 		.OnConsoleMessage( this, &SMarkdownAssetEditor::HandleConsoleMessage )
 	;
@@ -100,7 +93,7 @@ void SMarkdownAssetEditor::HandleMarkdownAssetPropertyChanged( UObject* Object, 
 
 void SMarkdownAssetEditor::HandleConsoleMessage( const FString& Message, const FString& Source, int32 Line, EWebBrowserConsoleLogSeverity Serverity )
 {
-	UE_LOG( LogTemp, Warning, TEXT( "Browser: %s" ), *Message );	
+	//UE_LOG( LogTemp, Warning, TEXT( "Browser: %s" ), *Message );	
 }
 
 #undef LOCTEXT_NAMESPACE
