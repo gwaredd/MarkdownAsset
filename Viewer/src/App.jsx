@@ -38,17 +38,16 @@ import md_math from 'markdown-it-math'
 import md_highlight from 'markdown-it-highlightjs'
 import md_anchors  from 'markdown-it-anchor'
 import md_toc  from 'markdown-it-table-of-contents'
-import md_replace_link from 'markdown-it-replace-link'
+import md_replace_link from './markdown-it-replace-link'
 
-import mermaid from 'mermaid'
-
-mermaid.initialize({
-  startOnLoad: true,
-  theme      : 'forest'
-})
+// import mermaid from 'mermaid'
+// mermaid.initialize({
+//   startOnLoad: true,
+//   theme      : 'forest'
+// })
 
 const opts_video = {
-  youtube: { width: 640, height: 390 },
+  youtube: { width: 640, height: 390, embed: 'simple'  },
   vimeo  : { width: 500, height: 281 },
   vine   : { width: 600, height: 600, embed: 'simple' },
   prezi  : { width: 550, height: 400 }
@@ -64,7 +63,7 @@ const opts_highlight = {
 
 const opts_replace_link = {
   processHTML: true,
-  replaceLink: (link, env) => link.startsWith('http') ? `javascript:window.ue.markdownbinding.openurl('${link}')` : link
+  replaceLink: (link, env) => link.startsWith('http') && !env.image ? `javascript:window.ue.markdownbinding.openurl('${link}')` : link
 }
 
 const md_opts = {
