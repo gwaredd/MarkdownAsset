@@ -21,11 +21,13 @@ hljs.registerLanguage( 'javascript', javascript )
 hljs.registerLanguage( 'js', javascript )
 
 /**/
-import './AppDark.css'
+const math_style = 'color=white&';
 import 'highlight.js/styles/base16/monokai.css'
+import './AppDark.css'
 /*/
-import './AppLight.css'
+const math_style = '';
 import 'highlight.js/styles/github.css'
+import './AppLight.css'
 /**/
 
 //-----------------------------------------------------------------------------
@@ -34,21 +36,32 @@ import markdownit from 'markdown-it'
 import md_tasklists from 'markdown-it-task-lists'
 import md_video from '@vrcd-community/markdown-it-video'
 import md_diagrams from 'markdown-it-textual-uml'
-import md_math from 'markdown-it-math'
 import md_highlight from 'markdown-it-highlightjs'
 import md_anchors  from 'markdown-it-anchor'
 import md_toc  from 'markdown-it-table-of-contents'
-import md_replace_link from 'markdown-it-replace-link'
+import md_replace_link from './markdown-it-replace-link'
 
-import mermaid from 'mermaid'
+//NB: MathJax API -> https://math.vercel.app/home
+// import texzilla from 'texzilla'
+import md_math from 'markdown-it-math'
 
-mermaid.initialize({
-  startOnLoad: true,
-  theme      : 'forest'
-})
+const opts_math = {
+  inlineOpen    : '$',
+  inlineClose   : '$',
+  blockOpen     : '$$',
+  blockClose    : '$$',
+  inlineRenderer: (str) => `<img src="https://math.vercel.app?${math_style}inline=${encodeURIComponent(str)}" alt="${str}" />`,
+  blockRenderer : (str) => `<img src="https://math.vercel.app?${math_style}from=${encodeURIComponent(str)}" alt="${str}" />`,
+}
+
+// import mermaid from 'mermaid'
+// mermaid.initialize({
+//   startOnLoad: true,
+//   theme      : 'forest'
+// })
 
 const opts_video = {
-  youtube: { width: 640, height: 390 },
+  youtube: { width: 640, height: 390, embed: 'simple'  },
   vimeo  : { width: 500, height: 281 },
   vine   : { width: 600, height: 600, embed: 'simple' },
   prezi  : { width: 550, height: 400 }
@@ -64,7 +77,7 @@ const opts_highlight = {
 
 const opts_replace_link = {
   processHTML: true,
-  replaceLink: (link, env) => link.startsWith('http') ? `javascript:window.ue.markdownbinding.openurl('${link}')` : link
+  replaceLink: (link, env) => link.startsWith('http') && !env.image ? `javascript:window.ue.markdownbinding.openurl('${link}')` : link
 }
 
 const md_opts = {
@@ -77,7 +90,7 @@ const md = markdownit(md_opts)
   .use( md_highlight, opts_highlight )
   .use( md_tasklists, { enabled: true } )
   .use( md_video, opts_video )
-  .use( md_math )
+  .use( md_math, opts_math )
   .use( md_diagrams )
   .use( md_anchors.default )
   .use( md_toc )
