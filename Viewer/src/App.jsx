@@ -9,16 +9,9 @@ import {
   IconFileText
 } from '@tabler/icons-react'
 
+
 //-----------------------------------------------------------------------------
-// highlight.js
-
-import hljs from 'highlight.js'
-import javascript from 'highlight.js/lib/languages/javascript'
-import markdown from 'highlight.js/lib/languages/markdown'
-
-hljs.registerLanguage( 'markdown', markdown )
-hljs.registerLanguage( 'javascript', javascript )
-hljs.registerLanguage( 'js', javascript )
+// style
 
 /**/
 const math_style = 'color=white&';
@@ -30,7 +23,26 @@ import 'highlight.js/styles/github.css'
 import './AppLight.css'
 /**/
 
+
 //-----------------------------------------------------------------------------
+// highlight.js
+
+import hljs from 'highlight.js'
+import javascript from 'highlight.js/lib/languages/javascript'
+import markdown from 'highlight.js/lib/languages/markdown'
+
+hljs.registerLanguage( 'markdown', markdown )
+hljs.registerLanguage( 'javascript', javascript )
+hljs.registerLanguage( 'js', javascript )
+
+
+//-----------------------------------------------------------------------------
+
+// import mermaid from 'mermaid'
+// mermaid.initialize({
+//   startOnLoad: true,
+//   theme      : 'forest'
+// })
 
 import markdownit from 'markdown-it'
 import md_tasklists from 'markdown-it-task-lists'
@@ -40,9 +52,6 @@ import md_highlight from 'markdown-it-highlightjs'
 import md_anchors  from 'markdown-it-anchor'
 import md_toc  from 'markdown-it-table-of-contents'
 import md_replace_link from './markdown-it-replace-link'
-
-//NB: MathJax API -> https://math.vercel.app/home
-// import texzilla from 'texzilla'
 import md_math from 'markdown-it-math'
 
 const opts_math = {
@@ -54,14 +63,8 @@ const opts_math = {
   blockRenderer : (str) => `<img src="https://math.vercel.app?${math_style}from=${encodeURIComponent(str)}" alt="${str}" />`,
 }
 
-// import mermaid from 'mermaid'
-// mermaid.initialize({
-//   startOnLoad: true,
-//   theme      : 'forest'
-// })
-
 const opts_video = {
-  youtube: { width: 640, height: 390, embed: 'simple'  },
+  youtube: { width: 640, height: 390 },
   vimeo  : { width: 500, height: 281 },
   vine   : { width: 600, height: 600, embed: 'simple' },
   prezi  : { width: 550, height: 400 }

@@ -136,11 +136,18 @@ Which gives this:
 
 PlantUML and Dot diagrams work fine. Ditaa and Mermaid, not so much.
 
+### Videos
+
+You can embed videos from YouTube and Vimeo like this:
+
+```markdown
+@[youtube](tgbNymZ7vqY)
+@[youtube](http://www.youtube.com/embed/tgbNymZ7vqY)
+```
+
 ## Notes
 
 **NB:** You might not want to ship with your documentation. Make sure the markdown assets are not included in your build, unless you really want to ship with them.
-
-Unfortunately, playing videos does not appear to be supported by the Unreal Web Browser plugin.
 
 GL & HF
 
