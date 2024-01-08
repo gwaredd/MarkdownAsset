@@ -84,9 +84,9 @@ const opts_replace_link = {
 }
 
 const md_opts = {
-  html      : true,
+  html      : false,
   linkify   : true,
-  typography: true
+  typography: false
 }
 
 const md = markdownit(md_opts)
