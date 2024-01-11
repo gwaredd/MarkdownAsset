@@ -9,20 +9,13 @@ import {
   IconFileText
 } from '@tabler/icons-react'
 
-
 //-----------------------------------------------------------------------------
 // style
 
-/**/
-const math_style = 'color=white&';
-import 'highlight.js/styles/base16/monokai.css'
-import './AppDark.css'
-/*/
-const math_style = '';
-import 'highlight.js/styles/github.css'
-import './AppLight.css'
-/**/
-
+// NB: these are resolved by vite config
+import 'Highlight.css' 
+import 'App.css'
+const math_style = import.meta.env.VITE_FLAVOUR == 'light' ? '' : 'color=white&';
 
 //-----------------------------------------------------------------------------
 // highlight.js
