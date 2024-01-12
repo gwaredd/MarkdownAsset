@@ -1,6 +1,7 @@
-#root {
+body, html, #root {
     background: #1a1a1a;
     color: #c6cdd4;
+    height: 100%;
 }
 
 a {
