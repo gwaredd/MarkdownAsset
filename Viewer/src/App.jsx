@@ -1,21 +1,24 @@
 import { useState, useEffect } from 'react'
 import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
 import Fab from '@mui/material/Fab'
 import Editor from 'react-simple-code-editor'
+import throttle from 'lodash/throttle'
 
 import {
-  IconTextPlus,
-  IconFileText
+  IconEdit,
+  IconFileText,
+  IconBoxAlignLeft
 } from '@tabler/icons-react'
 
 //-----------------------------------------------------------------------------
 // style
 
-// NB: these are resolved by vite config
-import 'Highlight.css' 
-import 'App.css'
-const math_style = import.meta.env.VITE_FLAVOUR == 'light' ? '' : 'color=white&';
+import 'Highlight.css' // resolved in vite.config.js
+import 'App.css'       // resolved in vite.config.js
+const math_style = import.meta.env.VITE_THEME == 'light' ? '' : 'color=white&';
+
 
 //-----------------------------------------------------------------------------
 // highlight.js
@@ -30,6 +33,7 @@ hljs.registerLanguage( 'js', javascript )
 
 
 //-----------------------------------------------------------------------------
+// setup markdown-it and plugins
 
 // import mermaid from 'mermaid'
 // mermaid.initialize({
@@ -91,6 +95,8 @@ const md = markdownit(md_opts)
   .use( md_anchors.default )
   .use( md_toc )
   .use( md_replace_link, opts_replace_link )
+;
+
 
 //-----------------------------------------------------------------------------
 
@@ -109,12 +115,14 @@ const Edit = (props) => {
       style         = {{
         fontFamily: '"Fira code", "Fira Mono", monospace',
         fontSize  : 12,
-        width     : '100vw',
+        // width     : '100%',
         minHeight : '100vh',
+        overflowY : 'auto',
       }}
     />
   )
 }
+
 
 //-----------------------------------------------------------------------------
 
@@ -124,50 +132,99 @@ const View = (props) => {
   const {code} = props
 
   return (
-    <main
+    <Box
       style={{
-        width     : '100vw',
+        // width     : '100%',
         minHeight : '100vh',
         padding   : theme.spacing(3),
+        overflowY : 'auto',
       }}
       dangerouslySetInnerHTML={{__html: md.render( code )}}
     />
   )
 }
 
+
+//-----------------------------------------------------------------------------
+// throttling the update makes the UI more responsive
+
+const updateUnreal = (text) => {
+  if( window.ue && window.ue.markdownbinding ) {
+    window.ue.markdownbinding.settext( text )
+  }
+}
+
+const updateUnrealThrottled = throttle( updateUnreal, 1000, { leading: true, trailing: true } );
+
+const Mode = {
+  View: 'view',
+  Edit: 'edit',
+  SxS : 'sxs', // side-by-side
+};
+
+
 //-----------------------------------------------------------------------------
 
 export default function App() {
 
-  const [open, setOpen] = useState( false )
-  const [code, setCode] = useState( '' )
+  const [mode, setMode] = useState( Mode.View )
+  const [text, setText] = useState( '' )
 
   useEffect(() => {
     if( window.ue && window.ue.markdownbinding ) {
-      window.ue.markdownbinding.gettext().then( (text) => setCode(text) )
+      window.ue.markdownbinding.gettext().then( (text) => setText(text) )
     }
   },[])
 
-  const onToggle = () => {
-    setOpen(!open)
-  }
-
-  const onUpdateCode = (code) => {
-    if( window.ue && window.ue.markdownbinding ) {
-      window.ue.markdownbinding.settext( code )
-    }
-    setCode(code)
+  const onUpdate = (text) => {
+    updateUnrealThrottled( text );
+    setText( text )
   }
 
   return (
-    <Box>
+    <>
       <Fab
-        style={{position:'fixed',top:'1.5em',right:'1.5em'}}
-        onClick={onToggle}
+        style   = {{position:'fixed',top:'1.5em',right:'1.5em'}}
+        onClick = {() => setMode( mode == Mode.View ? Mode.Edit : Mode.View )}
       >
-        { open ? <IconFileText/> : <IconTextPlus/> }
+      {
+        {
+          'view': <IconEdit/>,
+          'edit': <IconFileText/>,
+          'sxs' : <IconFileText/>,
+        }[mode]
+      }
       </Fab>
-      { open ? <Edit code={code} setCode={onUpdateCode}/> : <View code={code}/> }
-    </Box>
+      { mode != Mode.View &&
+        <Fab
+          style   = {{position:'fixed',top:'1.5em',right:'6em'}}
+          color   = "secondary"
+          onClick = {() => setMode( mode == Mode.Edit ? Mode.SxS : Mode.Edit )}
+          >
+        {
+          {
+            'edit': <IconBoxAlignLeft/>,
+            'sxs' : <IconEdit/>,
+          }[mode]
+        }
+        </Fab>
+      }
+      {
+        {
+          'view': <View code={text}/>,
+          'edit': <Edit code={text} setCode={onUpdate}/>,
+          'sxs' : <Box flexDirection="column" display="flex" height="100%">
+            <Box flexGrow={1} display="flex" overflow="hidden">
+              <Box overflow="auto" width="50%">
+                <Edit code={text} setCode={onUpdate}/>
+              </Box>
+              <Box overflow="auto" width="50%">
+                <View code={text}/>
+              </Box>
+            </Box>
+          </Box>
+        }[mode]
+      }
+    </>
   )
 }
