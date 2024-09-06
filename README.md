@@ -51,6 +51,10 @@ You can directly copy and paste a reference to any asset or C++ file from the ed
 ![X](./Docs/AssetReference.png)
 ![X](./Docs/ScriptReference.png)
 
+Because Markdown files are assets too, you can reference them too! very useful to build one big index for your systems documentations
+
+![X](./Docs/MarkdownReference.png)
+
 You can specify a function in a class link by adding ".FunctionName" at the end, right before the last "'" character. When clicked, the default IDE will show the class at the specific function.
 
 i.e: to link the GetOwnerActor function inside the GameplayTask class the link is:
