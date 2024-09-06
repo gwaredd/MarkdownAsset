@@ -23,7 +23,7 @@
 		{
 			"Name": "MarkdownAssetEditor",
 			"Type": "Editor",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "PostEngineInit"
 		}
 	]
 }

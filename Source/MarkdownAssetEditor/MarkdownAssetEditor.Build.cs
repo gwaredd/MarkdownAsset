@@ -35,6 +35,8 @@ public class MarkdownAssetEditor : ModuleRules
             "UnrealEd",
 			"MarkdownAsset",
             "WebBrowser",
+            "DeveloperSettings",
+            "ToolMenus",
         });
 
         PrivateIncludePathModuleNames.AddRange( new string[] {

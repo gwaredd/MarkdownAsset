@@ -9,6 +9,7 @@
 #include "AssetTools/MarkdownAssetActions.h"
 #include "Styles/MarkdownAssetEditorStyle.h"
 #include "MarkdownAssetEditorSettings.h"
+#include "DeveloperSettings/MarkdownAssetDeveloperSettings.h"
 
 #define LOCTEXT_NAMESPACE "FMarkdownAssetEditorModule"
 
@@ -116,6 +117,20 @@ class FMarkdownAssetEditorModule
 		{
 			MenuExtensibilityManager = MakeShareable( new FExtensibilityManager );
 			ToolBarExtensibilityManager = MakeShareable( new FExtensibilityManager );
+
+			UToolMenu* ToolMenu = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar.ModesToolBar");
+			FToolMenuSection& MenuSection = ToolMenu->FindOrAddSection("Documentation");
+			MenuSection.AddEntry(FToolMenuEntry::InitToolBarButton(
+				TEXT("OpenDocumentation"),
+				FExecuteAction::CreateLambda([]()
+				{
+					const UMarkdownAssetDeveloperSettings* Settings = GetDefault<UMarkdownAssetDeveloperSettings>();
+					GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAsset(Settings->GetDocumentationMainFileSoftPath());
+				}),
+				INVTEXT("Open the project documentation."),
+				INVTEXT("Open the project documentation."),
+				FSlateIcon(FAppStyle::GetAppStyleSetName(), "Icons.Documentation")
+			));
 		}
 
 		/** Unregisters main menu and tool bar menu extensions. */
