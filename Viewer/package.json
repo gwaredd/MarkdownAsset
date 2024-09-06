@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "yarn build:light && yarn build:dark",
-    "build:light": "set THEME=light && vite build && mv -f dist\\index.html ..\\Content\\light.html",
-    "build:dark": "set THEME=dark && vite build && mv -f dist\\index.html ..\\Content\\dark.html",
+    "build:light": "set THEME=light && vite build && move /y dist\\index.html ..\\Content\\light.html",
+    "build:dark": "set THEME=dark && vite build && move /y dist\\index.html ..\\Content\\dark.html",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -42,6 +42,6 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "vite": "^5.0.8"
+    "vite": "^5.0.10"
   }
 }

@@ -77,7 +77,8 @@ const opts_highlight = {
 
 const opts_replace_link = {
   processHTML: true,
-  replaceLink: (link, env) => link.startsWith('http') && !env.image ? `javascript:window.ue.markdownbinding.openurl('${link}')` : link
+  replaceLink: (link, env) => link.startsWith('/Script') ? `javascript:window.ue.markdownbinding.openasset('${link.substring(link.indexOf("'")+1,link.lastIndexOf("'"))}')`
+  : (link.startsWith('http') && !env.image ? `javascript:window.ue.markdownbinding.openurl('${link}')` : link)
 }
 
 const md_opts = {

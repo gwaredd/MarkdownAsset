@@ -20,6 +20,9 @@ public:
 	UFUNCTION()
 	void OpenURL( FString url );
 
+	UFUNCTION()
+	void OpenAsset( FString url );
+
 	DECLARE_EVENT( UMarkdownBinding, FOnSetTextEvent )
 	FOnSetTextEvent OnSetText;
 
