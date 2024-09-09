@@ -37,6 +37,7 @@ public class MarkdownAssetEditor : ModuleRules
             "WebBrowser",
             "DeveloperSettings",
             "ToolMenus",
+            "AssetDefinition",
         });
 
         PrivateIncludePathModuleNames.AddRange( new string[] {

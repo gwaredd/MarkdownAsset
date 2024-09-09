@@ -6,10 +6,9 @@
 #include "Templates/SharedPointer.h"
 #include "Toolkits/AssetEditorToolkit.h"
 
-#include "AssetTools/MarkdownAssetActions.h"
-#include "Styles/MarkdownAssetEditorStyle.h"
 #include "MarkdownAssetEditorSettings.h"
 #include "DeveloperSettings/MarkdownAssetDeveloperSettings.h"
+#include "Icons/Icons.h"
 
 #define LOCTEXT_NAMESPACE "FMarkdownAssetEditorModule"
 
@@ -38,16 +37,12 @@ class FMarkdownAssetEditorModule
 
 		virtual void StartupModule() override
 		{
-			Style = MakeShareable( new FMarkdownAssetEditorStyle() );
-
-			RegisterAssetTools();
 			RegisterMenuExtensions();
 			RegisterSettings();
 		}
 
 		virtual void ShutdownModule() override
 		{
-			UnregisterAssetTools();
 			UnregisterMenuExtensions();
 			UnregisterSettings();
 		}
@@ -58,19 +53,7 @@ class FMarkdownAssetEditorModule
 		}
 
 	protected:
-
-		void RegisterAssetTools()
-		{
-			IAssetTools& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>( "AssetTools" ).Get();
-			RegisterAssetTypeAction( AssetTools, MakeShareable( new FMarkdownAssetActions( Style.ToSharedRef() ) ) );
-		}
-
-		void RegisterAssetTypeAction( IAssetTools& AssetTools, TSharedRef<IAssetTypeActions> Action )
-		{
-			AssetTools.RegisterAssetTypeActions( Action );
-			RegisteredAssetTypeActions.Add( Action );
-		}
-
+	
 		void RegisterSettings()
 		{
 			ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>( "Settings" );
@@ -82,21 +65,6 @@ class FMarkdownAssetEditorModule
 					LOCTEXT( "MarkdownAssetSettingsDescription", "Configure the Markdown Asset plug-in." ),
 					GetMutableDefault<UMarkdownAssetEditorSettings>()
 				);
-			}
-		}
-
-		void UnregisterAssetTools()
-		{
-			FAssetToolsModule* AssetToolsModule = FModuleManager::GetModulePtr<FAssetToolsModule>( "AssetTools" );
-
-			if( AssetToolsModule != nullptr )
-			{
-				IAssetTools& AssetTools = AssetToolsModule->Get();
-
-				for( auto Action : RegisteredAssetTypeActions )
-				{
-					AssetTools.UnregisterAssetTypeActions( Action );
-				}
 			}
 		}
 
@@ -129,7 +97,7 @@ class FMarkdownAssetEditorModule
 				}),
 				INVTEXT("Open the project documentation."),
 				INVTEXT("Open the project documentation."),
-				FSlateIcon(FAppStyle::GetAppStyleSetName(), "Icons.Documentation")
+				Markdown_Icons::DocumentationIcon
 			));
 		}
 
@@ -143,8 +111,6 @@ class FMarkdownAssetEditorModule
 	private:
 
 		TSharedPtr<FExtensibilityManager> MenuExtensibilityManager;
-		TArray<TSharedRef<IAssetTypeActions>> RegisteredAssetTypeActions;
-		TSharedPtr<ISlateStyle> Style;
 		TSharedPtr<FExtensibilityManager> ToolBarExtensibilityManager;
 };
 

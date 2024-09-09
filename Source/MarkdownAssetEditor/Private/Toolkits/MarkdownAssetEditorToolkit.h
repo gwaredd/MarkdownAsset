@@ -15,8 +15,11 @@ class FMarkdownAssetEditorToolkit : public FAssetEditorToolkit, public FGCObject
 {
 	public:
 
-		FMarkdownAssetEditorToolkit( const TSharedRef<ISlateStyle>& InStyle );
+		// FMarkdownAssetEditorToolkit( const TSharedRef<ISlateStyle>& InStyle );
+		FMarkdownAssetEditorToolkit();
 		virtual ~FMarkdownAssetEditorToolkit();
+
+		static const TSharedPtr<ISlateStyle> Style;
 
 	public:
 
@@ -46,7 +49,5 @@ class FMarkdownAssetEditorToolkit : public FAssetEditorToolkit, public FGCObject
 		TSharedRef<SDockTab> HandleTabManagerSpawnTab( const FSpawnTabArgs& Args, FName TabIdentifier );
 
 	private:
-
-		UMarkdownAsset* MarkdownAsset;
-		TSharedRef<ISlateStyle> Style;
+		TObjectPtr<UMarkdownAsset> MarkdownAsset;
 };

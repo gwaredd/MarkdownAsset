@@ -5,7 +5,7 @@
 #include "UObject/ObjectMacros.h"
 #include "MarkdownAssetEditorSettings.generated.h"
 
-
+//TODO (Maxi): Move this to UMarkdownAssetDeveloperSettings
 UCLASS( config = Editor )
 class MARKDOWNASSETEDITOR_API UMarkdownAssetEditorSettings : public UObject
 {
