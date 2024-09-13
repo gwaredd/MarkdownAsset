@@ -60,7 +60,7 @@ EAssetCommandResult UAssetDefinition_MarkdownAsset::OpenAssets(const FAssetOpenA
 // Menu Extensions
 //--------------------------------------------------------------------
 
-namespace MenuExtension_Markdown
+namespace MenuExtension_MarkdownAsset
 {
 	void ExecuteExportAsMarkdownFile(const FToolMenuContext& InContext)
 	{
@@ -115,10 +115,9 @@ namespace MenuExtension_Markdown
 				{
 					const TAttribute<FText> Label = LOCTEXT("MarkdownAsset_ExportAsMD", "Export as MD File");
 					const TAttribute<FText> ToolTip = LOCTEXT("MarkdownAsset_ExportAsMDTooltip", "Export the MarkdownAsset as a .MD file.");
-					const FSlateIcon Icon = Markdown_Icons::DocumentationIcon;
+					const FSlateIcon Icon = MarkdownIcons::DocumentationIcon;
 
-					FToolUIAction UIAction;
-					UIAction.ExecuteAction = FToolMenuExecuteAction::CreateStatic(&ExecuteExportAsMarkdownFile);
+					FToolUIAction UIAction = FToolMenuExecuteAction::CreateStatic(&ExecuteExportAsMarkdownFile);
 					InSection.AddMenuEntry("MarkdownAsset_ExportAsMD", Label, ToolTip, Icon, UIAction);
 				}
 			}));

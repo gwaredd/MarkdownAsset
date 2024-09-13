@@ -12,26 +12,8 @@
 
 #define LOCTEXT_NAMESPACE "FMarkdownAssetEditorModule"
 
-class FMarkdownAssetEditorModule
-	: public IHasMenuExtensibility
-	, public IHasToolBarExtensibility
-	, public IModuleInterface
+class FMarkdownAssetEditorModule : public IModuleInterface
 {
-	public:
-
-		virtual TSharedPtr<FExtensibilityManager> GetMenuExtensibilityManager() override
-		{
-			return MenuExtensibilityManager;
-		}
-
-	// IHasToolBarExtensibility
-	public:
-
-		virtual TSharedPtr<FExtensibilityManager> GetToolBarExtensibilityManager() override
-		{
-			return ToolBarExtensibilityManager;
-		}
-
 	// IModuleInterface
 	public:
 
@@ -43,7 +25,7 @@ class FMarkdownAssetEditorModule
 
 		virtual void ShutdownModule() override
 		{
-			UnregisterMenuExtensions();
+			//UnregisterMenuExtensions();
 			UnregisterSettings();
 		}
 
@@ -71,21 +53,16 @@ class FMarkdownAssetEditorModule
 		void UnregisterSettings()
 		{
 			ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>( "Settings" );
-
+			
 			if( SettingsModule != nullptr )
 			{
 				SettingsModule->UnregisterSettings( "Editor", "Plugins", "MarkdownAsset" );
 			}
 		}
-
-	protected:
-
+	
 		/** Registers main menu and tool bar menu extensions. */
 		void RegisterMenuExtensions()
 		{
-			MenuExtensibilityManager = MakeShareable( new FExtensibilityManager );
-			ToolBarExtensibilityManager = MakeShareable( new FExtensibilityManager );
-
 			UToolMenu* ToolMenu = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar.ModesToolBar");
 			FToolMenuSection& MenuSection = ToolMenu->FindOrAddSection("Documentation");
 			MenuSection.AddEntry(FToolMenuEntry::InitToolBarButton(
@@ -97,21 +74,9 @@ class FMarkdownAssetEditorModule
 				}),
 				INVTEXT("Open the project documentation."),
 				INVTEXT("Open the project documentation."),
-				Markdown_Icons::DocumentationIcon
+				MarkdownIcons::DocumentationIcon
 			));
 		}
-
-		/** Unregisters main menu and tool bar menu extensions. */
-		void UnregisterMenuExtensions()
-		{
-			MenuExtensibilityManager.Reset();
-			ToolBarExtensibilityManager.Reset();
-		}
-
-	private:
-
-		TSharedPtr<FExtensibilityManager> MenuExtensibilityManager;
-		TSharedPtr<FExtensibilityManager> ToolBarExtensibilityManager;
 };
 
 

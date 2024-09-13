@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace Markdown_Icons
+namespace MarkdownIcons
 {
 	static FSlateIcon DocumentationIcon = FSlateIcon(FAppStyle::GetAppStyleSetName(), "Icons.Documentation");
 }

@@ -35,5 +35,4 @@ void UMarkdownBinding::OpenAsset( FString URL )
 		
 	    FSlateNotificationManager::Get().AddNotification(*Info);
 	}
-	
 }
