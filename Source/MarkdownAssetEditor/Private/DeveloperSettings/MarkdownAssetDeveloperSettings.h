@@ -17,6 +17,12 @@ class MARKDOWNASSETEDITOR_API UMarkdownAssetDeveloperSettings : public UDevelope
 
 public:
 
+	static const UMarkdownAssetDeveloperSettings* Get();
+
+#if WITH_EDITOR
+	void OpenEditorSettingWindow() const;
+#endif //WITH_EDITOR
+
 	const FSoftObjectPath& GetDocumentationMainFileSoftPath() const { return DocumentationMainFile.ToSoftObjectPath(); }
 
 protected:

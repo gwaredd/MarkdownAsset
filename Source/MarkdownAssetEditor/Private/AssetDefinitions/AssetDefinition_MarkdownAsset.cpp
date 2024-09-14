@@ -74,7 +74,7 @@ namespace MenuExtension_MarkdownAsset
 			{
 				if (DesktopPlatform)
 				{
-					const FText Title = FText::Format(LOCTEXT("Markdown_ExportMDDialogTitle", "Export '{0}' as Markdown..."), FText::FromString(*MarkdownAsset->GetName()));
+					const FText Title = FText::Format(LOCTEXT("MarkdownAsset_ExportMDDialogTitle", "Export '{0}' as Markdown..."), FText::FromString(*MarkdownAsset->GetName()));
 					const FString DefaultBrowsePath = FPaths::ProjectDir();
 					const FString FileTypes = TEXT( "Markdown (*.md)|*.md" );
 

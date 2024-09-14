@@ -8,6 +8,7 @@
 
 #include "MarkdownAssetEditorSettings.h"
 #include "DeveloperSettings/MarkdownAssetDeveloperSettings.h"
+#include "HelperFunctions/MarkdownAssetEditorStatics.h"
 #include "Icons/Icons.h"
 
 #define LOCTEXT_NAMESPACE "FMarkdownAssetEditorModule"
@@ -43,8 +44,8 @@ class FMarkdownAssetEditorModule : public IModuleInterface
 			if( SettingsModule != nullptr )
 			{
 				ISettingsSectionPtr SettingsSection = SettingsModule->RegisterSettings( "Editor", "Plugins", "MarkdownAsset",
-					LOCTEXT( "MarkdownAssetSettingsName", "Markdown Asset" ),
-					LOCTEXT( "MarkdownAssetSettingsDescription", "Configure the Markdown Asset plug-in." ),
+					LOCTEXT("MarkdownAssetSettingsName", "Markdown Asset" ),
+					LOCTEXT("MarkdownAssetSettingsDescription", "Configure the Markdown Asset plug-in." ),
 					GetMutableDefault<UMarkdownAssetEditorSettings>()
 				);
 			}
@@ -69,8 +70,17 @@ class FMarkdownAssetEditorModule : public IModuleInterface
 				TEXT("OpenDocumentation"),
 				FExecuteAction::CreateLambda([]()
 				{
+					const FText NotFoundMessage = LOCTEXT("MarkdownAssetProjectMainFileNotFound", "Define your main file in the MarkdownAsset Settings Screen!");
 					const UMarkdownAssetDeveloperSettings* Settings = GetDefault<UMarkdownAssetDeveloperSettings>();
-					GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAsset(Settings->GetDocumentationMainFileSoftPath());
+
+					MarkdownAssetStatics::FHyperlinkData HyperlinkData;
+					HyperlinkData.Hyperlink = FSimpleDelegate::CreateLambda([]()
+					{
+						UMarkdownAssetDeveloperSettings::Get()->OpenEditorSettingWindow();
+					});
+					HyperlinkData.HyperlinkText = NotFoundMessage;
+					
+					MarkdownAssetStatics::TryToOpenAsset(Settings->GetDocumentationMainFileSoftPath(), FText::FromString(""), HyperlinkData);
 				}),
 				INVTEXT("Open the project documentation."),
 				INVTEXT("Open the project documentation."),

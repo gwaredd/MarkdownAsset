@@ -13,7 +13,6 @@ public class MarkdownAssetEditor : ModuleRules
 
         PrivateIncludePaths.AddRange( new string[] {
             "MarkdownAssetEditor/Private",
-            "MarkdownAssetEditor/Private/AssetTools",
             "MarkdownAssetEditor/Private/Factories",
             "MarkdownAssetEditor/Private/Shared",
             "MarkdownAssetEditor/Private/Styles",
