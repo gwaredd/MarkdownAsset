@@ -1,9 +1,13 @@
 ﻿#pragma once
+
+#include "AssetToolsModule.h"
 #include "PackageTools.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "IContentBrowserSingleton.h"
 #include "ContentBrowserModule.h"
+#include "MarkdownAssetFactoryNew.h"
 #include "DeveloperSettings/MarkdownAssetDeveloperSettings.h"
+#include "Shared/MarkdownAssetEditorSettings.h"
 #include "Framework/Notifications/NotificationManager.h"
 #include "LogChannels/MarkdownLogChannels.h"
 #include "Widgets/Notifications/SNotificationList.h"
@@ -35,6 +39,11 @@ namespace MarkdownAssetStatics
 	static void TryToOpenAsset(const FSoftObjectPath& ObjectPath, const FText& MessageIfNotFound = FText::FromString(""),
 		const FHyperlinkData& HyperlinkData = FHyperlinkData() )
 	{
+		if (!ObjectPath.IsValid())
+		{
+			return;
+		}
+		
 		UObject* Object = FindObject<UObject>(ObjectPath.GetAssetPath());
 		if (!Object)
 		{
@@ -74,15 +83,20 @@ namespace MarkdownAssetStatics
 		TryToOpenAsset(FSoftObjectPath(URL), MessageIfNotFound);
 	};
 
-	static FString GetAssetNameForDocumentation(const UObject* Asset)
+	static FString GetAssetShortName(const UObject* Asset)
 	{
 		const FString BaseName = Asset->GetOutermost()->GetName();
 
 		const FString SanitizedBasePackageName = UPackageTools::SanitizePackageName(BaseName);
 		const FString PackagePath = FPackageName::GetLongPackagePath(SanitizedBasePackageName);
-		FString BaseAssetShortName = FPackageName::GetLongPackageAssetName(SanitizedBasePackageName);
+		return FPackageName::GetLongPackageAssetName(SanitizedBasePackageName);
+	}
 
-		const UMarkdownAssetDeveloperSettings* Settings = GetDefault<UMarkdownAssetDeveloperSettings>();
+	static FString GetAssetNameForDocumentation(const UObject* Asset)
+	{
+		FString BaseAssetShortName = MarkdownAssetStatics::GetAssetShortName(Asset);
+
+		const UMarkdownAssetEditorSettings* Settings = GetDefault<UMarkdownAssetEditorSettings>();
 		if (Settings->ShouldRemovePrefix())
 		{
 			int32 UnderscoreIndex;
@@ -93,7 +107,8 @@ namespace MarkdownAssetStatics
 			}
 		}
 
-		const FString FinalNameWithPrefix = Settings->GetDefaultPrefix() + BaseAssetShortName;
+		const UMarkdownAssetDeveloperSettings* ProjectSettings = GetDefault<UMarkdownAssetDeveloperSettings>();
+		const FString FinalNameWithPrefix = ProjectSettings->GetDefaultPrefix() + BaseAssetShortName;
 
 		return FinalNameWithPrefix;
 	};
@@ -101,8 +116,14 @@ namespace MarkdownAssetStatics
 	static FString GetOrCreateDocumentationFolderPath()
 	{
 		const UMarkdownAssetDeveloperSettings* Settings = GetDefault<UMarkdownAssetDeveloperSettings>();
-		const FString RelativeDocumentationFolderPath = Settings->GetRelativeDocumentationFolderPath();
+		FString RelativeDocumentationFolderPath;
+		Settings->GetRelativeDocumentationFolderPath(RelativeDocumentationFolderPath);
 
+		if (RelativeDocumentationFolderPath.IsEmpty())
+		{
+			return TEXT("");
+		}
+		
 		FString AbsolutePath;
 		
 		if (!FPackageName::TryConvertLongPackageNameToFilename(RelativeDocumentationFolderPath, AbsolutePath))
@@ -115,11 +136,12 @@ namespace MarkdownAssetStatics
 		{
 			return RelativeDocumentationFolderPath;
 		}
-		
-		FText Title = FText::FromString("Default Folder doesn't exist");
-		FText Message = FText::Format(FText::FromString("Do you want to create the folder '{0}'?"), FText::FromString(RelativeDocumentationFolderPath));
-		EAppReturnType::Type Response = FMessageDialog::Open(EAppMsgType::YesNo, Message, Title);
 
+		/** Default folder is valid but doesn't exist, so we create it if the user wants. */
+		FText Title = FText::FromString("Default Folder doesn't exist");
+		FText Message = FText::Format(FText::FromString("Do you want to create the folder now '{0}'?"), FText::FromString(RelativeDocumentationFolderPath));
+		EAppReturnType::Type Response = FMessageDialog::Open(EAppMsgType::YesNo, Message, Title);
+		
 		if (Response == EAppReturnType::No)
 		{
 			return TEXT("");
@@ -140,7 +162,61 @@ namespace MarkdownAssetStatics
 
 	static FText CreateDocumentTitle(const UObject* DocumentedObject)
 	{
-		return FText::FromString(TEXT("# ")+DocumentedObject->GetOutermost()->GetName()+TEXT("\n\n"));
+		const FString Name = MarkdownAssetStatics::GetAssetShortName(DocumentedObject);
+		return FText::FromString(TEXT("# ")+Name+TEXT("\n\n"));
+	};
+
+	static UMarkdownAsset* CreateMarkdownAssetFileForAsset(const UObject* AssetToDocument)
+	{
+		const UMarkdownAssetDeveloperSettings* Settings = GetDefault<UMarkdownAssetDeveloperSettings>();
+
+		const FString Prefix = Settings->GetDefaultPrefix();
+		const FString Name = MarkdownAssetStatics::GetAssetNameForDocumentation(AssetToDocument);
+		FString PackagePath = MarkdownAssetStatics::GetOrCreateDocumentationFolderPath();
+
+		FAssetToolsModule& AssetToolsModule = FModuleManager::Get().LoadModuleChecked<FAssetToolsModule>("AssetTools");
+
+		/** If default folder could not be created we get the same folder as the Object to be documented. */
+		if (PackagePath.IsEmpty())
+		{
+			FString TempName;
+			AssetToolsModule.Get().CreateUniqueAssetName(AssetToDocument->GetOutermost()->GetName(), TEXT(""), PackagePath, TempName);
+		}
+
+		UMarkdownAssetFactoryNew* MarkdownFactory = NewObject<UMarkdownAssetFactoryNew>();
+		const FText Content = MarkdownAssetStatics::CreateDocumentTitle(AssetToDocument);
+		MarkdownFactory->Content = Content;
+
+		// Can be null if user close the dialog or cancels.
+		UObject* NewMarkdownAsset = AssetToolsModule.Get().CreateAssetWithDialog(Name, PackagePath, UMarkdownAsset::StaticClass(), MarkdownFactory);
+
+		return Cast<UMarkdownAsset>(NewMarkdownAsset);
+	}
+
+	static void OpenOrCreateMarkdownFileForAsset(const UObject* Asset)
+	{
+		UMarkdownAssetDeveloperSettings* ProjectSettings = GetMutableDefault<UMarkdownAssetDeveloperSettings>();
+		const FSoftObjectPath* MarkdownAsset = ProjectSettings->GetMarkdownForAsset(Asset);
+		UObject* MarkdownAssetToOpen;
+		
+		if (MarkdownAsset->IsValid() && FPackageName::DoesPackageExist(MarkdownAsset->ToString()))
+		{
+			MarkdownAssetToOpen = MarkdownAsset->TryLoad();
+		}
+		else
+		{
+			MarkdownAssetToOpen = CreateMarkdownAssetFileForAsset(Asset);
+			ProjectSettings->AddMarkdownAssetForFile(Asset, MarkdownAssetToOpen);
+			ProjectSettings->SaveConfig(CPF_Config, *ProjectSettings->GetDefaultConfigFilename());
+			
+			const UMarkdownAssetEditorSettings* EditorSettings = GetDefault<UMarkdownAssetEditorSettings>();
+			if(!EditorSettings->ShouldOpenNewFiles())
+			{
+				return;
+			}
+		}
+
+		MarkdownAssetStatics::TryToOpenAsset(MarkdownAssetToOpen);
 	}
 }
 

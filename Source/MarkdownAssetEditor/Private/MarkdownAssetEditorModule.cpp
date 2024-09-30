@@ -1,6 +1,5 @@
 #include "MarkdownAssetEditorModule.h"
 
-#include "AnimationEditorUtils.h"
 #include "Containers/Array.h"
 #include "ISettingsModule.h"
 #include "ISettingsSection.h"
@@ -10,7 +9,6 @@
 #include "Toolkits/AssetEditorToolkit.h"
 
 #include "MarkdownAssetEditorSettings.h"
-#include "MarkdownAssetFactoryNew.h"
 #include "DeveloperSettings/MarkdownAssetDeveloperSettings.h"
 #include "Toolkits/AssetEditorToolkitMenuContext.h"
 #include "HelperFunctions/MarkdownAssetEditorStatics.h"
@@ -119,26 +117,8 @@ void FMarkdownAssetEditorModule::EditorAction_OpenAssetDocumentation(UAssetEdito
 	
 	const TArray<UObject*> Objects = ExecutionContext->GetEditingObjects();
 	const UObject* Object = Objects[0];
-	const UMarkdownAssetDeveloperSettings* Settings = GetDefault<UMarkdownAssetDeveloperSettings>();
 
-	const FString Prefix = Settings->GetDefaultPrefix();
-	const FString Name = MarkdownAssetStatics::GetAssetNameForDocumentation(Object);
-	FString PackagePath = MarkdownAssetStatics::GetOrCreateDocumentationFolderPath();
-
-	FAssetToolsModule& AssetToolsModule = FModuleManager::Get().LoadModuleChecked<FAssetToolsModule>("AssetTools");
-
-	/** If default folder could not be created we get the same folder as the Object to be documented. */
-	if (PackagePath.IsEmpty())
-	{
-		FString TempName;
-		AssetToolsModule.Get().CreateUniqueAssetName(Object->GetOutermost()->GetName(), TEXT(""), PackagePath, TempName);
-	}
-
-	UMarkdownAssetFactoryNew* MarkdownFactory = NewObject<UMarkdownAssetFactoryNew>();
-	const FText Content = MarkdownAssetStatics::CreateDocumentTitle(Object);
-	MarkdownFactory->Content = Content;
-	
-	AssetToolsModule.Get().CreateAssetWithDialog(Name, PackagePath, UMarkdownAsset::StaticClass(), MarkdownFactory);
+	MarkdownAssetStatics::OpenOrCreateMarkdownFileForAsset(Object);
 }
 
 #undef LOCTEXT_NAMESPACE

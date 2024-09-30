@@ -25,9 +25,9 @@ public:
 
 	const FSoftObjectPath& GetDocumentationMainFileSoftPath() const { return DocumentationMainFile.ToSoftObjectPath(); }
 
-	const FString& GetRelativeDocumentationFolderPath() const
+	void GetRelativeDocumentationFolderPath(FString& OutPath) const
 	{
-		return DocumentationDirectory.Path;
+		OutPath = bUseDefaultFolder ? DocumentationDirectory.Path : TEXT("");
 	}
 
 	const FString& GetDefaultPrefix() const
@@ -35,9 +35,14 @@ public:
 		return DefaultPrefix;
 	}
 
-	const bool ShouldRemovePrefix() const
+	const FSoftObjectPath* GetMarkdownForAsset(const UObject* Asset) const
 	{
-		return bTryToRemoveAssetsPrefixesOnDocumentationCreation;
+		return MarkdownFilesPerAssets.Find(Asset);
+	}
+
+	void AddMarkdownAssetForFile(const FSoftObjectPath& Asset, const FSoftObjectPath& MarkdownAsset)
+	{
+		MarkdownFilesPerAssets.Add(Asset, MarkdownAsset);
 	}
 
 protected:
@@ -50,18 +55,19 @@ protected:
 	UPROPERTY(Config, EditDefaultsOnly)
 	TSoftObjectPtr<UMarkdownAsset> DocumentationMainFile;
 
-	/**  */
 	UPROPERTY(Config, EditDefaultsOnly)
-	TMap<TSoftObjectPtr<UObject>, TSoftObjectPtr<UMarkdownAsset>> DocumentationFilesPerObject;
+	TMap<FSoftObjectPath, FSoftObjectPath> MarkdownFilesPerAssets;
 
-	/** All documentation files will be created in this directory by default. */
-	UPROPERTY(Config, EditDefaultsOnly, Category=AssetCreation)
+	UPROPERTY(Config, EditDefaultsOnly, Category=AssetCreation, meta=(InlineEditConditionToggle))
+	bool bUseDefaultFolder = true;
+	
+	/** If enabled and valid, when creating a new MarkdownAsset file from an Asset editor window or context action this
+	 * folder will be the default value in the asset creation Window.
+	 * If disabled or not valid, the same folder of the asset will be used instead. */
+	UPROPERTY(Config, EditDefaultsOnly, Category=AssetCreation, meta=(EditCondition=bUseDefaultFolder))
 	FDirectoryPath DocumentationDirectory = FDirectoryPath("/Game/Documentation");
 
 	UPROPERTY(Config, EditDefaultsOnly, Category=AssetCreation)
 	FString DefaultPrefix = FString(TEXT("MD_"));
 
-	/** If true, when creating a new associated MarkdownAsset from it, the prefixs will try to be removed. */
-	UPROPERTY(Config, EditDefaultsOnly, Category=AssetCreation)
-	bool bTryToRemoveAssetsPrefixesOnDocumentationCreation = true;
 };
