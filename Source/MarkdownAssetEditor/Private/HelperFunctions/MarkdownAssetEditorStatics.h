@@ -199,7 +199,7 @@ namespace MarkdownAssetStatics
 		const FSoftObjectPath* MarkdownAsset = ProjectSettings->GetMarkdownForAsset(Asset);
 		UObject* MarkdownAssetToOpen;
 		
-		if (MarkdownAsset->IsValid() && FPackageName::DoesPackageExist(MarkdownAsset->ToString()))
+		if( MarkdownAsset && MarkdownAsset->IsValid() && FPackageName::DoesPackageExist(MarkdownAsset->ToString()) )
 		{
 			MarkdownAssetToOpen = MarkdownAsset->TryLoad();
 		}
