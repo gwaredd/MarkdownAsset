@@ -1,5 +1,7 @@
 #include "MarkdownBinding.h"
 
+#include "HelperFunctions/MarkdownAssetEditorStatics.h"
+
 void UMarkdownBinding::OpenURL( FString URL )
 {
     FPlatformProcess::LaunchURL( *URL, nullptr, nullptr );
@@ -7,5 +9,5 @@ void UMarkdownBinding::OpenURL( FString URL )
 
 void UMarkdownBinding::OpenAsset( FString URL )
 {
-    GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAsset(URL);
+	MarkdownAssetStatics::TryToOpenAsset(URL);
 }

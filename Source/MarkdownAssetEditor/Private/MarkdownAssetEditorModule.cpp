@@ -1,3 +1,5 @@
+#include "MarkdownAssetEditorModule.h"
+
 #include "Containers/Array.h"
 #include "ISettingsModule.h"
 #include "ISettingsSection.h"
@@ -6,133 +8,118 @@
 #include "Templates/SharedPointer.h"
 #include "Toolkits/AssetEditorToolkit.h"
 
-#include "AssetTools/MarkdownAssetActions.h"
-#include "Styles/MarkdownAssetEditorStyle.h"
 #include "MarkdownAssetEditorSettings.h"
+#include "DeveloperSettings/MarkdownAssetDeveloperSettings.h"
+#include "Toolkits/AssetEditorToolkitMenuContext.h"
+#include "HelperFunctions/MarkdownAssetEditorStatics.h"
+#include "Icons/Icons.h"
 
 #define LOCTEXT_NAMESPACE "FMarkdownAssetEditorModule"
 
-class FMarkdownAssetEditorModule
-	: public IHasMenuExtensibility
-	, public IHasToolBarExtensibility
-	, public IModuleInterface
+void FMarkdownAssetEditorModule::StartupModule()
 {
-	public:
+	RegisterMenuExtensions();
+	RegisterSettings();
+}
 
-		virtual TSharedPtr<FExtensibilityManager> GetMenuExtensibilityManager() override
-		{
-			return MenuExtensibilityManager;
-		}
+void FMarkdownAssetEditorModule::ShutdownModule()
+{
+	UnregisterMenuExtensions();
+	UnregisterSettings();
+}
 
-	// IHasToolBarExtensibility
-	public:
+void FMarkdownAssetEditorModule::RegisterMenuExtensions()
+{
+	FToolMenuOwnerScoped OwnerScoped(this);
+	
+	UToolMenu* LevelEditorToolbar = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar.ModesToolBar");
+	
+	FToolMenuSection& LevelEditorDocumentationSection = LevelEditorToolbar->FindOrAddSection("Documentation");
 
-		virtual TSharedPtr<FExtensibilityManager> GetToolBarExtensibilityManager() override
-		{
-			return ToolBarExtensibilityManager;
-		}
+	LevelEditorDocumentationSection.AddEntry(FToolMenuEntry::InitToolBarButton(
+		TEXT("OpenDocumentation"),
+		FUIAction(FExecuteAction::CreateRaw(this, &FMarkdownAssetEditorModule::EditorAction_OpenProjectDocumentation)),
+		INVTEXT("Open the project documentation."),
+		INVTEXT("Open the project documentation."),
+		MarkdownIcons::DocumentationIcon
+	));
 
-	// IModuleInterface
-	public:
+	
+	
+	UToolMenu* AssetEditorToolbar = UToolMenus::Get()->ExtendMenu("AssetEditorToolbar.CommonActions");
+	
+	FToolMenuSection& AssetEditorDocumentationSection = AssetEditorToolbar->FindOrAddSection("Documentation");
+	AssetEditorDocumentationSection.AddDynamicEntry(NAME_None, FNewToolMenuSectionDelegate::CreateLambda(
+	[this](FToolMenuSection& AssetEditorDocumentationSection)
+	{
+		UAssetEditorToolkitMenuContext* Context = AssetEditorDocumentationSection.FindContext<UAssetEditorToolkitMenuContext>();
+	
+		AssetEditorDocumentationSection.AddEntry(FToolMenuEntry::InitToolBarButton(
+			TEXT("OpenAssetDocumentation"),
+			FUIAction(FExecuteAction::CreateRaw(this, &FMarkdownAssetEditorModule::EditorAction_OpenAssetDocumentation, Context)),
+			INVTEXT("Open asset documentation"),
+			INVTEXT("Open asset documentation"),
+			MarkdownIcons::DocumentationIcon
+		));
+	}));
+}
 
-		virtual void StartupModule() override
-		{
-			Style = MakeShareable( new FMarkdownAssetEditorStyle() );
+void FMarkdownAssetEditorModule::RegisterSettings()
+{
+	ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>( "Settings" );
 
-			RegisterAssetTools();
-			RegisterMenuExtensions();
-			RegisterSettings();
-		}
+	if( SettingsModule != nullptr )
+	{
+		ISettingsSectionPtr SettingsSection = SettingsModule->RegisterSettings( "Editor", "Plugins", "MarkdownAsset",
+			LOCTEXT("MarkdownAssetSettingsName", "Markdown Asset" ),
+			LOCTEXT("MarkdownAssetSettingsDescription", "Configure the Markdown Asset plug-in." ),
+			GetMutableDefault<UMarkdownAssetEditorSettings>()
+		);
+	}
+}
 
-		virtual void ShutdownModule() override
-		{
-			UnregisterAssetTools();
-			UnregisterMenuExtensions();
-			UnregisterSettings();
-		}
+void FMarkdownAssetEditorModule::UnregisterMenuExtensions()
+{
+	UToolMenus::UnregisterOwner(this);
+}
 
-		virtual bool SupportsDynamicReloading() override
-		{
-			return true;
-		}
+void FMarkdownAssetEditorModule::UnregisterSettings()
+{
+	ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>( "Settings" );
+	
+	if( SettingsModule != nullptr )
+	{
+		SettingsModule->UnregisterSettings( "Editor", "Plugins", "MarkdownAsset" );
+	}
+}
 
-	protected:
+void FMarkdownAssetEditorModule::EditorAction_OpenProjectDocumentation()
+{
+	const FText NotFoundMessage = LOCTEXT("MarkdownAssetProjectMainFileNotFound", "Define your main file in the MarkdownAsset Settings Screen!");
+	const UMarkdownAssetDeveloperSettings* Settings = GetDefault<UMarkdownAssetDeveloperSettings>();
 
-		void RegisterAssetTools()
-		{
-			IAssetTools& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>( "AssetTools" ).Get();
-			RegisterAssetTypeAction( AssetTools, MakeShareable( new FMarkdownAssetActions( Style.ToSharedRef() ) ) );
-		}
+	MarkdownAssetStatics::FHyperlinkData HyperlinkData;
+	HyperlinkData.Hyperlink = FSimpleDelegate::CreateLambda([]()
+	{
+		UMarkdownAssetDeveloperSettings::Get()->OpenEditorSettingWindow();
+	});
+	HyperlinkData.HyperlinkText = NotFoundMessage;
+			
+	MarkdownAssetStatics::TryToOpenAsset(Settings->GetDocumentationMainFileSoftPath(), FText::FromString(""), HyperlinkData);
+}
 
-		void RegisterAssetTypeAction( IAssetTools& AssetTools, TSharedRef<IAssetTypeActions> Action )
-		{
-			AssetTools.RegisterAssetTypeActions( Action );
-			RegisteredAssetTypeActions.Add( Action );
-		}
+void FMarkdownAssetEditorModule::EditorAction_OpenAssetDocumentation(UAssetEditorToolkitMenuContext* ExecutionContext)
+{
+	if (!ensureAlways(ExecutionContext && ExecutionContext->GetEditingObjects().Num() > 0))
+	{
+		return;
+	}
+	
+	const TArray<UObject*> Objects = ExecutionContext->GetEditingObjects();
+	const UObject* Object = Objects[0];
 
-		void RegisterSettings()
-		{
-			ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>( "Settings" );
+	MarkdownAssetStatics::OpenOrCreateMarkdownFileForAsset(Object);
+}
 
-			if( SettingsModule != nullptr )
-			{
-				ISettingsSectionPtr SettingsSection = SettingsModule->RegisterSettings( "Editor", "Plugins", "MarkdownAsset",
-					LOCTEXT( "MarkdownAssetSettingsName", "Markdown Asset" ),
-					LOCTEXT( "MarkdownAssetSettingsDescription", "Configure the Markdown Asset plug-in." ),
-					GetMutableDefault<UMarkdownAssetEditorSettings>()
-				);
-			}
-		}
-
-		void UnregisterAssetTools()
-		{
-			FAssetToolsModule* AssetToolsModule = FModuleManager::GetModulePtr<FAssetToolsModule>( "AssetTools" );
-
-			if( AssetToolsModule != nullptr )
-			{
-				IAssetTools& AssetTools = AssetToolsModule->Get();
-
-				for( auto Action : RegisteredAssetTypeActions )
-				{
-					AssetTools.UnregisterAssetTypeActions( Action );
-				}
-			}
-		}
-
-		void UnregisterSettings()
-		{
-			ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>( "Settings" );
-
-			if( SettingsModule != nullptr )
-			{
-				SettingsModule->UnregisterSettings( "Editor", "Plugins", "MarkdownAsset" );
-			}
-		}
-
-	protected:
-
-		/** Registers main menu and tool bar menu extensions. */
-		void RegisterMenuExtensions()
-		{
-			MenuExtensibilityManager = MakeShareable( new FExtensibilityManager );
-			ToolBarExtensibilityManager = MakeShareable( new FExtensibilityManager );
-		}
-
-		/** Unregisters main menu and tool bar menu extensions. */
-		void UnregisterMenuExtensions()
-		{
-			MenuExtensibilityManager.Reset();
-			ToolBarExtensibilityManager.Reset();
-		}
-
-	private:
-
-		TSharedPtr<FExtensibilityManager> MenuExtensibilityManager;
-		TArray<TSharedRef<IAssetTypeActions>> RegisteredAssetTypeActions;
-		TSharedPtr<ISlateStyle> Style;
-		TSharedPtr<FExtensibilityManager> ToolBarExtensibilityManager;
-};
-
-
-IMPLEMENT_MODULE( FMarkdownAssetEditorModule, MarkdownAssetEditor );
 #undef LOCTEXT_NAMESPACE
+IMPLEMENT_MODULE( FMarkdownAssetEditorModule, MarkdownAssetEditor );

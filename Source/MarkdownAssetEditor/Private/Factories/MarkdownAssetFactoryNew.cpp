@@ -11,7 +11,9 @@ UMarkdownAssetFactoryNew::UMarkdownAssetFactoryNew( const FObjectInitializer& Ob
 
 UObject* UMarkdownAssetFactoryNew::FactoryCreateNew( UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn )
 {
-	return NewObject<UMarkdownAsset>( InParent, InClass, InName, Flags );
+	UMarkdownAsset* MarkdownAsset = NewObject<UMarkdownAsset>( InParent, InClass, InName, Flags | RF_Transactional );
+	MarkdownAsset->Text = Content;
+	return MarkdownAsset;
 }
 
 bool UMarkdownAssetFactoryNew::ShouldShowInNewMenu() const

@@ -1,9 +1,9 @@
 #include "MarkdownAssetEditorToolkit.h"
 #include "Editor.h"
 #include "EditorReimportHandler.h"
-#include "EditorStyleSet.h"
 #include "SMarkdownAssetEditor.h"
 #include "MarkdownAsset.h"
+#include "MarkdownAssetEditorStyle.h"
 #include "UObject/NameTypes.h"
 #include "Widgets/Docking/SDockTab.h"
 
@@ -19,10 +19,12 @@ namespace MarkdownAssetEditor
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FMarkdownAssetEditorToolkit::FMarkdownAssetEditorToolkit( const TSharedRef<ISlateStyle>& InStyle )
+const TSharedPtr<ISlateStyle> FMarkdownAssetEditorToolkit::Style = MakeShareable( new FMarkdownAssetEditorStyle());
+
+FMarkdownAssetEditorToolkit::FMarkdownAssetEditorToolkit()
 	: MarkdownAsset( nullptr )
-	, Style( InStyle )
 {
+	
 }
 
 FMarkdownAssetEditorToolkit::~FMarkdownAssetEditorToolkit()
@@ -123,7 +125,7 @@ TSharedRef<SDockTab> FMarkdownAssetEditorToolkit::HandleTabManagerSpawnTab( cons
 
 	if( TabIdentifier == MarkdownAssetEditor::TabId )
 	{
-		TabWidget = SNew( SMarkdownAssetEditor, MarkdownAsset, Style );
+		TabWidget = SNew( SMarkdownAssetEditor, MarkdownAsset, Style.ToSharedRef() );
 	}
 
 	return SNew( SDockTab )
