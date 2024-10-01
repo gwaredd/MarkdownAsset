@@ -124,3 +124,5 @@ namespace MenuExtension_MarkdownAsset
 		}));
 	});
 }
+
+#undef LOCTEXT_NAMESPACE
