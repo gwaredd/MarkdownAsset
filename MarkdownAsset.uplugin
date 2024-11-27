@@ -10,10 +10,11 @@
 	"DocsURL": "",
 	"MarketplaceURL": "",
 	"SupportURL": "",
-	"CanContainContent": true,
+	"CanContainContent": false,
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": false,
+	"Enabled": false,
 	"Modules": [
 		{
 			"Name": "MarkdownAsset",
@@ -24,6 +25,12 @@
 			"Name": "MarkdownAssetEditor",
 			"Type": "Editor",
 			"LoadingPhase": "PostEngineInit"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "WebBrowserWidget",
+			"Enabled": true
 		}
 	]
 }
