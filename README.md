@@ -1,11 +1,13 @@
 # Markdown Asset
 
-This adds markdown as an asset to the Unreal game engine.
+A plugin for the Unreal game engine that adds Markdown as a new asset type.
+ 
+> Unreal supported versions
+> * 5.3
+> * 5.4
+> * 5.5
 
-> * Tested on UE 5.3
-> * Note this also requires the Web Browser plugin to be enabled.
-
-Behold, the latest game-changing feature in Unreal: Markdown! Why, you ask? Because sometimes, in the wild world of side projects, you need to document your midnight musings right where the magic happens – in the game editor itself! Now, you can scribble notes amid your digital dragons and spaceships. Genius or madness? Jury's still out. Really, I just fancied coding my own asset type for giggles. Any regrets? A smidge. But hey, it's done now. If others find it useful, brilliant! If not, at least my cat appreciates the extra keyboard time.
+This allows you to create and manage documentation directly within the engine. This is particularly useful for personal projects and prototyping when you want to keep documentation with the project and close to hand.
 
 ## How to install
 
@@ -18,10 +20,10 @@ Behold, the latest game-changing feature in Unreal: Markdown! Why, you ask? Beca
 
 ### Create an asset
 
-* In the content browser
-* Right click -> Miscellaneous -> Markdown Asset
+* Right click in the content browser
+* `Documentation -> Markdown Asset`
 
-![X](./Docs/NewAsset.png)
+![New markdown asset context menu](./Docs/NewAsset.png)
 
 ### Edit an asset
 
@@ -29,7 +31,7 @@ Behold, the latest game-changing feature in Unreal: Markdown! Why, you ask? Beca
 * This will open the asset in the editor
 * You can switch between the editor and preview mode using the button in the top right
 
-![X](./Docs/Editing.png)
+![View markdown](./Docs/Editing.png)
 
 ### Settings
 
@@ -42,18 +44,18 @@ The plugin uses the UAssetEditorSubsystem from the engine to open any asset from
 
 You can add links to your project assets, C++ file or even specific functions of a C++ class.
 
-![X](./Docs/LinksVariations.png)
+![Unreal Engine Links](./Docs/LinksVariations.png)
 
 ### How to link anything
 
 You can directly copy and paste a reference to any asset or C++ file from the editor
 
-![X](./Docs/AssetReference.png)
-![X](./Docs/ScriptReference.png)
+![Copy asset reference](./Docs/AssetReference.png)
+![Copy script reference](./Docs/ScriptReference.png)
 
 Because Markdown files are assets too, you can reference them too! very useful to build one big index for your systems documentations
 
-![X](./Docs/MarkdownReference.png)
+![Copy reference](./Docs/MarkdownReference.png)
 
 You can specify a function in a class link by adding ".FunctionName" at the end, right before the last "'" character. When clicked, the default IDE will show the class at the specific function.
 
@@ -105,7 +107,7 @@ Are added like this:
 
 Which gives this:
 
-![X](./Docs/TaskList.png)
+![Create task list](./Docs/TaskList.png)
 
 
 ### Anchors
@@ -148,7 +150,7 @@ You can add math equations with [MathJax](https://www.mathjax.org/) by wrapping 
 
 Gives ...
 
-![X](./Docs/Math.png)
+![MathJax](./Docs/Math.png)
 
 
 ### Diagrams
@@ -170,7 +172,7 @@ For example:
 
 Which gives this:
 
-![X](./Docs/Diagrams.png)
+![GraphViz Diagrams](./Docs/Diagrams.png)
 
 PlantUML and Dot diagrams work fine. Ditaa and Mermaid, not so much.
 
@@ -182,10 +184,4 @@ You can embed videos from YouTube and Vimeo like this:
 @[youtube](tgbNymZ7vqY)
 @[youtube](http://www.youtube.com/embed/tgbNymZ7vqY)
 ```
-
-## Notes
-
-**NB:** You might not want to ship with your documentation. Make sure the markdown assets are not included in your build, unless you really want to ship with them.
-
-GL & HF
 
