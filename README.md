@@ -2,7 +2,7 @@
 
 A plugin for the Unreal game engine that adds Markdown as a new asset type.
  
-> Unreal supported versions
+> Unreal tested versions
 > * 5.3
 > * 5.4
 > * 5.5
