@@ -2,14 +2,14 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "MarkdownAsset",
-	"Description": "",
-	"Category": "Other",
-	"CreatedBy": "Gwaredd",
-	"CreatedByURL": "",
-	"DocsURL": "",
-	"MarketplaceURL": "",
-	"SupportURL": "",
+	"FriendlyName": "Markdown Asset",
+	"Description": "In-editor support for markdown documentation",
+	"Category": "Editor",
+	"CreatedBy": "Gwaredd Mountain",
+	"CreatedByURL": "https://github.com/gwaredd/MarkdownAsset",
+	"DocsURL": "https://github.com/gwaredd/MarkdownAsset",
+	"FabURL": "com.epicgames.launcher://ue/Fab/product/8a8121a7-a72a-4b55-bae4-943150e15fd9",
+	"SupportURL": "https://github.com/gwaredd/MarkdownAsset/issues",
 	"CanContainContent": false,
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
@@ -19,12 +19,22 @@
 		{
 			"Name": "MarkdownAsset",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64",
+				"Mac",
+				"Linux"
+			]
 		},
 		{
 			"Name": "MarkdownAssetEditor",
 			"Type": "Editor",
-			"LoadingPhase": "PostEngineInit"
+			"LoadingPhase": "PostEngineInit",
+			"PlatformAllowList": [
+				"Win64",
+				"Mac",
+				"Linux"
+			]
 		}
 	],
 	"Plugins": [

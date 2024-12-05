@@ -1,5 +1,6 @@
-#include "MarkdownBinding.h"
+// Copyright (C) 2024 Gwaredd Mountain - All Rights Reserved.
 
+#include "MarkdownBinding.h"
 #include "HelperFunctions/MarkdownAssetEditorStatics.h"
 
 void UMarkdownBinding::OpenURL( FString URL )

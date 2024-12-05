@@ -1,3 +1,5 @@
+// Copyright (C) 2024 Gwaredd Mountain - All Rights Reserved.
+
 #include "SMarkdownAssetEditor.h"
 
 #include "Fonts/SlateFontInfo.h"

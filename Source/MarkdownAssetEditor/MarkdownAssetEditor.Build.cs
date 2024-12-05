@@ -1,3 +1,5 @@
+// Copyright (C) 2024 Gwaredd Mountain - All Rights Reserved.
+
 using UnrealBuildTool;
 
 public class MarkdownAssetEditor : ModuleRules

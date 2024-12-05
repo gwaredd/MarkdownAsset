@@ -1,3 +1,5 @@
+// Copyright (C) 2024 Gwaredd Mountain - All Rights Reserved.
+
 #include "MarkdownAssetFactory.h"
 
 #include "Containers/UnrealString.h"

@@ -1,3 +1,5 @@
+// Copyright (C) 2024 Gwaredd Mountain - All Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -27,5 +29,4 @@ public:
 	FOnSetTextEvent OnSetText;
 
 	FText Text;
-
 };

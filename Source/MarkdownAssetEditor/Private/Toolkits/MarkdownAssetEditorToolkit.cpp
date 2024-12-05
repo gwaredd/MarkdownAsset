@@ -1,3 +1,5 @@
+// Copyright (C) 2024 Gwaredd Mountain - All Rights Reserved.
+
 #include "MarkdownAssetEditorToolkit.h"
 #include "Editor.h"
 #include "EditorReimportHandler.h"

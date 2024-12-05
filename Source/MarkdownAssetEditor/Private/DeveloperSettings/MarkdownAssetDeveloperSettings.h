@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2024 El Burro Games - All Rights Reserved.
+﻿// Copyright (C) 2024 Gwaredd Mountain - All Rights Reserved.
 
 #pragma once
 
@@ -7,9 +7,6 @@
 #include "Engine/DeveloperSettingsBackedByCVars.h"
 #include "MarkdownAssetDeveloperSettings.generated.h"
 
-/**
- * 
- */
 UCLASS(Config=DocumentationSettings, DefaultConfig)
 class MARKDOWNASSETEDITOR_API UMarkdownAssetDeveloperSettings : public UDeveloperSettingsBackedByCVars
 {
@@ -51,19 +48,20 @@ protected:
 	
 	virtual FName GetSectionName() const override { return FName(TEXT("Markdown Documentation Settings")); }
 
-	/** The file that will be opened from the "Open Documentation" button in the LevelEditor toolbar. */
-	UPROPERTY(Config, EditDefaultsOnly)
+	// The file that will be opened from the "Open Documentation" button in the LevelEditor toolbar.
+	UPROPERTY(Config, EditDefaultsOnly, Category=AssetCreation )
 	TSoftObjectPtr<UMarkdownAsset> DocumentationMainFile;
 
-	UPROPERTY(Config, EditDefaultsOnly)
+	UPROPERTY(Config, EditDefaultsOnly, Category=AssetCreation )
 	TMap<FSoftObjectPath, FSoftObjectPath> MarkdownFilesPerAssets;
 
 	UPROPERTY(Config, EditDefaultsOnly, Category=AssetCreation, meta=(InlineEditConditionToggle))
 	bool bUseDefaultFolder = true;
 	
-	/** If enabled and valid, when creating a new MarkdownAsset file from an Asset editor window or context action this
-	 * folder will be the default value in the asset creation Window.
-	 * If disabled or not valid, the same folder of the asset will be used instead. */
+	// If enabled and valid, when creating a new MarkdownAsset file from an Asset editor window or context action this
+	// folder will be the default value in the asset creation Window.
+	// If disabled or not valid, the same folder of the asset will be used instead.
+
 	UPROPERTY(Config, EditDefaultsOnly, Category=AssetCreation, meta=(EditCondition=bUseDefaultFolder))
 	FDirectoryPath DocumentationDirectory = FDirectoryPath("/Game/Documentation");
 

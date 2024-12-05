@@ -1,4 +1,6 @@
-﻿#include "DeveloperSettings/MarkdownAssetDeveloperSettings.h"
+﻿// Copyright (C) 2024 Gwaredd Mountain - All Rights Reserved.
+
+#include "DeveloperSettings/MarkdownAssetDeveloperSettings.h"
 
 #include "ISettingsModule.h"
 

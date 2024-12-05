@@ -1,6 +1,5 @@
 ﻿// Copyright (C) 2024 El Burro Games - All Rights Reserved.
 
-
 #include "AssetDefinition_MarkdownAsset.h"
 
 #include "ContentBrowserMenuContexts.h"
