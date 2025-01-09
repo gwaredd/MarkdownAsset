@@ -65,6 +65,10 @@ i.e: to link the GetOwnerActor function inside the GameplayTask class the link i
 /Script/CoreUObject.Class'/Script/GameplayTasks.GameplayTask.GetOwnerActor'
 ```
 
+### Hermes
+
+Also supports [Hermes](https://github.com/jorgenpt/Hermes) and [RedTalaria](https://github.com/cdpred/RedTalaria) deeplinks.
+
 ### Anatomy of a link to an asset
 
 There are two important parts to link something from the engine: should starts with **"/Script"** and the actual link should be between two **'** characters after that.
