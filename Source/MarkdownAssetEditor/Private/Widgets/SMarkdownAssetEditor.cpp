@@ -14,7 +14,8 @@
 
 #define LOCTEXT_NAMESPACE "SMarkdownAssetEditor"
 
-///////////////////////////////////////////////////////////////////////////////
+
+//---------------------------------------------------------------------------------------------------------------------
 
 SMarkdownAssetEditor::~SMarkdownAssetEditor()
 {
@@ -26,7 +27,7 @@ SMarkdownAssetEditor::~SMarkdownAssetEditor()
 	}
 }
 
-///////////////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------------------------------------
 
 void SMarkdownAssetEditor::Construct( const FArguments& InArgs, UMarkdownAsset* InMarkdownAsset, const TSharedRef<ISlateStyle>& InStyle )
 {
@@ -48,6 +49,7 @@ void SMarkdownAssetEditor::Construct( const FArguments& InArgs, UMarkdownAsset* 
 		.InitialURL( URL )
 		.BackgroundColor( Settings->bDarkSkin ? FColor( 0.1f, 0.1f, 0.1f, 1.0f ) : FColor( 1.0f, 1.0f, 1.0f, 1.0f ) )
 		.OnConsoleMessage( this, &SMarkdownAssetEditor::HandleConsoleMessage )
+		.OnLoadUrl( this, &SMarkdownAssetEditor::OnLoadURL )
 	;
 
 	// setup binding
@@ -69,7 +71,7 @@ void SMarkdownAssetEditor::Construct( const FArguments& InArgs, UMarkdownAsset* 
 	FCoreUObjectDelegates::OnObjectPropertyChanged.AddSP( this, &SMarkdownAssetEditor::HandleMarkdownAssetPropertyChanged );
 }
 
-///////////////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------------------------------------
 
 FReply SMarkdownAssetEditor::OnKeyDown( const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent )
 {
@@ -83,19 +85,36 @@ FReply SMarkdownAssetEditor::OnKeyDown( const FGeometry& MyGeometry, const FKeyE
 	return FReply::Unhandled();
 }
 
-///////////////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------------------------------------
 
 void SMarkdownAssetEditor::HandleMarkdownAssetPropertyChanged( UObject* Object, FPropertyChangedEvent& PropertyChangedEvent )
 {
-	if( Object == MarkdownAsset )
-	{
-		// EditableTextBox->SetText( MarkdownAsset->Text );
-	}
+	//if( Object == MarkdownAsset )
+	//{
+	//	EditableTextBox->SetText( MarkdownAsset->Text );
+	//}
 }
 
 void SMarkdownAssetEditor::HandleConsoleMessage( const FString& Message, const FString& Source, int32 Line, EWebBrowserConsoleLogSeverity Serverity )
 {
 	//UE_LOG( LogTemp, Warning, TEXT( "Browser: %s" ), *Message );	
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+
+bool SMarkdownAssetEditor::OnLoadURL( const FString& Method, const FString& Url, FString& Response )
+{
+	// support for Hermes links: https://github.com/jorgenpt/Hermes
+
+	if( Url.StartsWith( "deeplink://", ESearchCase::IgnoreCase ) )
+	{
+		FPlatformProcess::LaunchURL( *Url, nullptr, nullptr );
+		return true;
+	}
+
+
+	return false;
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -30,6 +30,8 @@ class SMarkdownAssetEditor : public SCompoundWidget
 
 		void HandleMarkdownAssetPropertyChanged( UObject* Object, FPropertyChangedEvent& PropertyChangedEvent );
 		void HandleConsoleMessage( const FString& Message, const FString& Source, int32 Line, EWebBrowserConsoleLogSeverity Serverity );
+		bool OnLoadURL( const FString& Method, const FString& Url, FString& Response );
+
 
 	private:
 
