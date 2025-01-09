@@ -12,3 +12,4 @@ void UMarkdownBinding::OpenAsset( FString URL )
 {
 	MarkdownAssetStatics::TryToOpenAsset(URL);
 }
+
